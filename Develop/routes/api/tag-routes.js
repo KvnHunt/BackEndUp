@@ -3,35 +3,41 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const tagData = async  Tag.findAll({
-      include: [{ model: Product, through: ProductTag, as: 'productTag_products'}]
+    const tagData = await Tag.findAll({
+      include: [{ model: Product, through: ProductTag, as: 'productTag_products' }]
     });
-  await  res.status(200).json(tagData);
+
+    res.status(200).json(tagData);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
 
 
-router.get('/:id', (req, res) => {
+
+router.get('/:id', async (req, res) => {
   try {
-    const tagData = async  Tag.findByPk(req.params.id, {
+    const tagData = await Tag.findByPk(req.params.id, {
       include: [{ model: Product, through: ProductTag, as: 'productTag_products' }]
     });
-   await (!tagData) {
-      res.status(400).json({ message: 'No Product found with this id' });
+
+    if (!tagData) {
+      res.status(404).json({ message: 'No Tag found with this ID' });
       return;
     }
 
     res.status(200).json(tagData);
   } catch (err) {
+    console.error(err);
     res.status(500).json(err);
   }
 });
 
-router.post('/', (req, res) => {
+
+router.post('/', async (req, res) => {
   try {
     const tagData = await Tag.create(req.body);
     res.status(200).json(tagData);
@@ -54,7 +60,7 @@ router.put('/:id', (req, res) => {
   });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const tagData = await Tag.destroy({
       where: {
