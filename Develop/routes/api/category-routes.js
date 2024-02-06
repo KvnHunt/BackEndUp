@@ -7,10 +7,10 @@ router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
   try {
-    const categoryData = await Category.findAll({
+    const categoryData = async  Category.findAll({
       include: [{ model: Product }]
     });
-    res.status(200).json(categoryData)
+   await res.status(200).json(categoryData)
   } catch (err) {
     res.status(500).json(err);
   }
@@ -20,10 +20,10 @@ router.get('/:id', (req, res) => {
   // find one category by its `id` value
   // be sure to include its associated Products
   try {
-    const categoryData = await Category.findByPk(req.params.id, {
+    const categoryData = async  Category.findByPk(req.params.id, {
       include: [{ model: Product }]
     });
-    if (!categoryData) {
+    await (!categoryData) {
       res.status(404).json({message: 'No Category found with this ID'});
       return;
     }
@@ -36,8 +36,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   // create a new category
   try {
-    const categoryData = await Category.create(req.body);
-    res.status(200).json(categoryData);
+    const categoryData = async Category.create(req.body);
+    await res.status(200).json(categoryData);
   } catch (err) {
     res.status(400).json(err);
   }
